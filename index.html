@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<select id="province_name" onchange="RenderChart()">
+    <option value="All">All </option>
+    <option value="Hunan">HuNan </option>
+    <option value="Hubei">HuBei </option>
+    <option value="Anhui">AnHui </option>
+    <option value="Shanghai">Shanghai </option>
+    <option value="Beijing">Beijing </option>
+    <option value="Tianjing">Tianjing </option>
+    <option value="Chongqing">Chongqing </option>
+</select>
+
+<canvas id="myChart">Title</canvas>
+
+<script>
+
+    function get_covid_data(response_data) {
+        console.log(response_data)
+        let covid_data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        for (let i = 0; i<response_data.length; i++) {
+            let count = parseInt(response_data[i].confirmedCount)
+            let date = response_data[i].dateId.toString()
+            //console.log(date.substr(0, 6))
+            switch (date.substr(0, 6)) {
+                case '202001':
+                    covid_data[0] += count
+                    break
+                case '202002':
+                    covid_data[1] += count
+                    break
+                case '202003':
+                    covid_data[2] += count
+                    break
+                case '202004':
+                    covid_data[3] += count
+                    break
+                case '202005':
+                    covid_data[4] += count
+                    break
+                case '202006':
+                    covid_data[5] += count
+                    break
+                case '202007':
+                    covid_data[6] += count
+                    break
+                case '202008':
+                    covid_data[7] += count
+                    break
+                case '202009':
+                    covid_data[8] += count
+                    break
+                case '202010':
+                    covid_data[9] += count
+                    break
+                case '202011':
+                    covid_data[10] += count
+                    break
+                case '202012':
+                    covid_data[11] += count
+                    break
+                case '202101':
+                    covid_data[12] += count
+                    break
+                case '202102':
+                    covid_data[13] += count
+                    break
+                case '202103':
+                    covid_data[14] += count
+                    break
+                case '202104':
+                    covid_data[15] += count
+                    break
+                case '202105':
+                    covid_data[16] += count
+                    break
+                case '202106':
+                    covid_data[17] += count
+                    break
+                case '202107':
+                    covid_data[18] += count
+                    break
+                case '202108':
+                    covid_data[19] += count
+                    break
+                case '202109':
+                    covid_data[20] += count
+                    break
+                case '202110':
+                    covid_data[21] += count
+                    break
+                case '202111':
+                    covid_data[22] += count
+                    break
+                case '202112':
+                    covid_data[23] += count
+                    break
+                case '202201':
+                    covid_data[24] += count
+                    break
+                case '202202':
+                    covid_data[25] += count
+                    break
+                case '202203':
+                    covid_data[26] += count
+                    break
+                case '202204':
+                    covid_data[27] += count
+                    break
+                default:
+                    break
+            }
+        }
+        return covid_data
+    }
+
+    const labels = [
+        'January 2020',
+        'February 2020',
+        'March 2020',
+        'April 2020',
+        'May 2020',
+        'June 2020',
+        'July 2020',
+        'August 2020',
+        'September 2020',
+        'October 2020',
+        'November 2020',
+        'December 2020',
+        'January 2021',
+        'February 2021',
+        'March 2021',
+        'April 2021',
+        'May 2021',
+        'June 2021',
+        'July 2021',
+        'August 2021',
+        'September 2021',
+        'October 2021',
+        'November 2021',
+        'December 2021',
+        'January 2022',
+        'February 2022',
+        'March 2022',
+        'April 2022',
+        'May 2022',
+        'June 2022',
+    ];
+    console.log("line 151")
+
+    let covid_data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    const data = {
+        labels: labels,
+        datasets: [{
+            label: 'Confirmed Count',
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            data: covid_data,
+        }]
+    };
+
+    const config = {
+        type: 'line',
+        data: data,
+    };
+    console.log("before url")
+
+
+    let url = "http://111.231.75.86:8000/api/provinces/CHN/daily/"
+    var mychart;
+    myChart = new Chart(
+                document.getElementById('myChart'),
+                config
+            );
+
+    fetch(url, {method: 'GET'})
+        .then(response => {
+            console.log(response)
+            return response.json()})
+        .then(response_data => {
+            console.log(response_data)
+            covid_data = get_covid_data(response_data)
+            data.datasets[0].data = covid_data
+            myChart.update()
+
+        });
+
+    function RenderChart() {
+
+        let provinceName = document.getElementById("province_name").value.toString();
+        console.log(provinceName)
+        var url = "";
+        switch (provinceName) {
+            case "All":
+                url = "http://111.231.75.86:8000/api/provinces/CHN/daily/"
+                break
+            case "Anhui":
+                url = "http://111.231.75.86:8000/api/provinces/CHN/AH/daily/"
+                break
+            case "Shanghai":
+                url = "http://111.231.75.86:8000/api/provinces/CHN/AH/daily/"
+                break
+            case "Beijing":
+                url = "http://111.231.75.86:8000/api/provinces/CHN/BJ/daily/"
+                break
+            case "Chongqing":
+                url = "http://111.231.75.86:8000/api/provinces/CHN/CQ/daily/"
+                break
+            case "Tianjing":
+                url = "http://111.231.75.86:8000/api/provinces/CHN/TJ/daily/"
+                break
+            case "Hubei":
+                url = "http://111.231.75.86:8000/api/provinces/CHN/HB/daily/"
+                break
+            case "Hunan":
+                url = "http://111.231.75.86:8000/api/provinces/CHN/HN/daily/"
+                break
+            default:
+                break
+        }
+        if (url == "") {
+            console.log("Error on selection")
+            return
+        }
+
+        fetch(url, {method: 'GET'})
+            .then(response => response.json())
+            .then(response_data => {
+
+                covid_data = get_covid_data(response_data)
+                data.datasets[0].data = covid_data
+                myChart.update()
+
+            });
+    }
+
+</script>
+
+</body>
+</html>
