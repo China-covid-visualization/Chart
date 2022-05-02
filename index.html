@@ -8,6 +8,7 @@
 <body>
 
 <select id="province_name" onchange="RenderChart()">
+    <option value="Default">None </option>
     <option value="All">All </option>
     <option value="Hunan">HuNan </option>
     <option value="Hubei">HuBei </option>
@@ -16,6 +17,19 @@
     <option value="Beijing">Beijing </option>
     <option value="Tianjing">Tianjing </option>
     <option value="Chongqing">Chongqing </option>
+    <option value="Shanxi">ShanXi </option>
+    <option value="Shandong">ShanDong </option>
+    <option value="Liaoning">LiaoNing </option>
+    <option value="Jiangsu">JiangSu </option>
+    <option value="Zhejiang">ZheJiang </option>
+    <option value="Fujian">FuJian </option>
+    <option value="Jiangxi">JiangXi </option>
+    <option value="Guangdong">GuangDong </option>
+    <option value="Guangxi">GuangXi </option>
+    <option value="Sichuan">SiChuan </option>
+    <option value="Guizhou">Guizhou </option>
+    <option value="Gansu">Gansu </option>
+
 </select>
 
 <canvas id="myChart">Title</canvas>
@@ -172,25 +186,11 @@
     };
     console.log("before url")
 
-
-    let url = "http://111.231.75.86:8000/api/provinces/CHN/daily/"
     var mychart;
     myChart = new Chart(
                 document.getElementById('myChart'),
                 config
             );
-
-    fetch(url, {method: 'GET'})
-        .then(response => {
-            console.log(response)
-            return response.json()})
-        .then(response_data => {
-            console.log(response_data)
-            covid_data = get_covid_data(response_data)
-            data.datasets[0].data = covid_data
-            myChart.update()
-
-        });
 
     function RenderChart() {
 
@@ -222,11 +222,49 @@
             case "Hunan":
                 url = "http://111.231.75.86:8000/api/provinces/CHN/HN/daily/"
                 break
+            case "Shanxi":
+                url = "http://111.231.75.86:8000/api/provinces/CHN/SX/daily/"
+                break
+            case "Shandong":
+                url = "http://111.231.75.86:8000/api/provinces/CHN/SD/daily/"
+                break
+            case "Liaoning":
+                url = "http://111.231.75.86:8000/api/provinces/CHN/LN/daily/"
+                break
+            case "Jiangsu":
+                url = "http://111.231.75.86:8000/api/provinces/CHN/JS/daily/"
+                break
+            case "Zhejiang":
+                url = "http://111.231.75.86:8000/api/provinces/CHN/ZJ/daily/"
+                break
+            case "Fujian":
+                url = "http://111.231.75.86:8000/api/provinces/CHN/FJ/daily/"
+                break
+            case "Jiangxi":
+                url = "http://111.231.75.86:8000/api/provinces/CHN/JX/daily/"
+                break
+            case "Guangdong":
+                url = "http://111.231.75.86:8000/api/provinces/CHN/GD/daily/"
+                break
+            case "Guangxi":
+                url = "http://111.231.75.86:8000/api/provinces/CHN/GX/daily/"
+                break
+            case "Sichuan":
+                url = "http://111.231.75.86:8000/api/provinces/CHN/SC/daily/"
+                break
+            case "Guizhou":
+                url = "http://111.231.75.86:8000/api/provinces/CHN/GZ/daily/"
+                break
+            case "Gansu":
+                url = "http://111.231.75.86:8000/api/provinces/CHN/GS/daily/"
+                break
             default:
                 break
         }
         if (url == "") {
-            console.log("Error on selection")
+            covid_data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            data.datasets[0].data = covid_data
+            myChart.update()
             return
         }
 
